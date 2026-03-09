@@ -1,0 +1,41 @@
+# Python Backend
+backend/venv/
+backend/.pytest_cache/
+backend/pytest_output.txt
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Uploads and User Data
+uploads/
+test_data.csv
+test_results.txt
+test_results_utf8.txt
+database/*.db
+database/*.sqlite3
+
+# Flutter Frontend Build & Dart
+frontend/build/
+frontend/.dart_tool/
+frontend/.packages
+frontend/.pub-cache/
+frontend/pubspec.lock
+
+# Android Build
+frontend/android/.gradle/
+frontend/android/app/build/
+frontend/android/local.properties
+*.jks
+
+# iOS Build
+frontend/ios/Pods/
+frontend/ios/.symlinks/
+frontend/ios/Flutter/Flutter.framework
+frontend/ios/Flutter/Flutter.podspec
+
+# Editors
+.vscode/
+.idea/
+*.suo
+*.sln

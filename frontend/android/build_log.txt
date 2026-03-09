@@ -1,0 +1,58 @@
+﻿Resolving dependencies...
+Downloading packages...
+  meta 1.17.0 (1.18.1 available)
+  win32 5.15.0 (6.0.0 available)
+Got dependencies!
+2 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+Running Gradle task 'assembleDebug'...                          
+flutter : lib/main.dart:3:8: Error: Error when reading '/C:/Users/Sunny/AppData
+/Local/Pub/Cache/hosted/pub.dev/file_picker-10.3.10/lib/file_picker.dart': The 
+system cannot find the path specified
+At line:1 char:1
++ flutter build apk --debug 2>&1 | Out-File -FilePath "f:\InsightDash\f ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (lib/main.dart:3... path specified 
+   :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+import 'package:file_picker/file_picker.dart';
+       ^
+lib/main.dart:109:5: Error: 'FilePickerResult' isn't a type.
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+    ^^^^^^^^^^^^^^^^
+lib/main.dart:109:38: Error: The getter 'FilePicker' isn't defined for the 
+type '_FileUploadScreenState'.
+ - '_FileUploadScreenState' is from 'package:frontend/main.dart' 
+('lib/main.dart').
+Try correcting the name to the name of an existing getter, or defining a 
+getter or field named 'FilePicker'.
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+                                     ^^^^^^^^^^
+lib/main.dart:110:13: Error: The getter 'FileType' isn't defined for the type 
+'_FileUploadScreenState'.
+ - '_FileUploadScreenState' is from 'package:frontend/main.dart' 
+('lib/main.dart').
+Try correcting the name to the name of an existing getter, or defining a 
+getter or field named 'FileType'.
+      type: FileType.custom,
+            ^^^^^^^^
+Target kernel_snapshot_program failed: Exception
+
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileFlutterBuildDebug'.
+> Process 'command 'C:\flutter\flutter\bin\flutter.bat'' finished with 
+non-zero exit value 1
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 9s
+Running Gradle task 'assembleDebug'...                             10.0s
+Gradle task assembleDebug failed with exit code 1
