@@ -108,7 +108,7 @@ class _FileUploadScreenState extends State<FileUploadScreen> with SingleTickerPr
   Future<void> _pickAndUploadFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: ['csv', 'json', 'txt'],
+      allowedExtensions: ['csv', 'json', 'txt', 'xlsx', 'xls'],
       withData: kIsWeb,
     );
 

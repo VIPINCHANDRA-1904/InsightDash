@@ -3,3 +3,4 @@ uvicorn
 pandas
 SQLAlchemy
 python-multipart
+openpyxl

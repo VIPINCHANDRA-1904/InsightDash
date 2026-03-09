@@ -16,6 +16,8 @@ def process_log_file(file_path: str):
             df = pd.read_csv(file_path)
         elif file_path.endswith('.json'):
             df = pd.read_json(file_path)
+        elif file_path.endswith('.xlsx') or file_path.endswith('.xls'):
+            df = pd.read_excel(file_path)
         else:
             # Fallback for generic log files, assuming space/tab delimited or raw text
             # For simplicity in this lightweight tool, we read as csv with a separator guess
