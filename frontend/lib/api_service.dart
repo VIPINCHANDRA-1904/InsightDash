@@ -3,11 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  final String baseUrl = kIsWeb 
-      ? "http://127.0.0.1:8000/api" 
-      : (defaultTargetPlatform == TargetPlatform.android 
-          ? "http://10.0.2.2:8000/api" 
-          : "http://127.0.0.1:8000/api");
+  final String baseUrl = "https://insightdash-1.onrender.com/api";
 
   Future<List<dynamic>> getFiles() async {
     final response = await http.get(Uri.parse('$baseUrl/upload/files/'));
