@@ -1,6 +1,26 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from datetime import datetime
-from typing import Optional, Any, Dict
+from typing import Optional, Any, List, Dict
+
+class UserBase(BaseModel):
+    username: str
+
+class UserCreate(UserBase):
+    password: str
+
+class UserResponse(UserBase):
+    id: int
+    created_at: datetime
+    model_config = ConfigDict(from_attributes=True)
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+    user: UserResponse
+
+class LoginRequest(BaseModel):
+    username: str
+    password: str
 
 class FileResponse(BaseModel):
     id: int
@@ -8,9 +28,7 @@ class FileResponse(BaseModel):
     upload_time: datetime
     status: str
     file_size: int
-
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class AnalyticsResponse(BaseModel):
     id: int
@@ -19,9 +37,7 @@ class AnalyticsResponse(BaseModel):
     total_columns: int
     columns_info: Dict[str, Any]
     summary_stats: Dict[str, Any]
-
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class StandardResponse(BaseModel):
     status: str

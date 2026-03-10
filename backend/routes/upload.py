@@ -8,6 +8,8 @@ from database import SessionLocal, get_db
 from models import models, schemas
 from services.log_processor import process_log_file
 
+from auth import get_current_user
+
 router = APIRouter()
 
 UPLOAD_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'uploads'))
@@ -50,9 +52,10 @@ def parse_and_store_analytics(file_id: int, file_path: str):
 async def upload_log_file(
     background_tasks: BackgroundTasks, 
     file: UploadFile = File(...), 
-    db: Session = Depends(get_db)):
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)):
     
-    file_path = os.path.join(UPLOAD_DIR, file.filename)
+    file_path = os.path.join(UPLOAD_DIR, f"{current_user.id}_{file.filename}")
     
     # Save the file
     try:
@@ -68,7 +71,8 @@ async def upload_log_file(
         filename=file.filename,
         file_path=file_path,
         file_size=file_size,
-        status="uploaded"
+        status="uploaded",
+        user_id=current_user.id
     )
     db.add(new_file)
     db.commit()
@@ -84,8 +88,8 @@ async def upload_log_file(
     )
 
 @router.get("/files/", response_model=schemas.StandardResponse)
-def get_files(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    files = db.query(models.UploadedFile).offset(skip).limit(limit).all()
+def get_files(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    files = db.query(models.UploadedFile).filter(models.UploadedFile.user_id == current_user.id).offset(skip).limit(limit).all()
     file_list = []
     for f in files:
         file_list.append({

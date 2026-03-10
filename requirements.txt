@@ -4,3 +4,5 @@ pandas
 SQLAlchemy
 python-multipart
 openpyxl
+python-jose[cryptography]
+passlib[bcrypt]

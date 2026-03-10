@@ -5,7 +5,7 @@ import logging
 
 from database import engine
 from models import models
-from routes import upload, analytics
+from routes import upload, analytics, auth_routes
 
 # Create local db structure
 models.Base.metadata.create_all(bind=engine)
@@ -25,6 +25,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(auth_routes.router, prefix="/api/auth", tags=["Authentication"])
 app.include_router(upload.router, prefix="/api/upload", tags=["Upload"])
 app.include_router(analytics.router, prefix="/api/analytics", tags=["Analytics"])
 

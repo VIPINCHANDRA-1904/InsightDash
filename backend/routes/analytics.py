@@ -7,13 +7,19 @@ import os
 from database import get_db
 from models import models, schemas
 
+from auth import get_current_user
+
 router = APIRouter()
 
 @router.get("/{file_id}/summary", response_model=schemas.StandardResponse)
-def get_analytics_summary(file_id: int, db: Session = Depends(get_db)):
-    file_record = db.query(models.UploadedFile).filter(models.UploadedFile.id == file_id).first()
+def get_analytics_summary(file_id: int, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    file_record = db.query(models.UploadedFile).filter(
+        models.UploadedFile.id == file_id,
+        models.UploadedFile.user_id == current_user.id
+    ).first()
+    
     if not file_record:
-        raise HTTPException(status_code=404, detail="File not found")
+        raise HTTPException(status_code=404, detail="File not found or access denied")
         
     if file_record.status != "completed":
         raise HTTPException(status_code=400, detail=f"File status is {file_record.status}")
@@ -36,10 +42,14 @@ def get_analytics_summary(file_id: int, db: Session = Depends(get_db)):
     )
 
 @router.get("/{file_id}/dataset", response_model=schemas.StandardResponse)
-def get_processed_dataset(file_id: int, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    file_record = db.query(models.UploadedFile).filter(models.UploadedFile.id == file_id).first()
+def get_processed_dataset(file_id: int, skip: int = 0, limit: int = 100, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    file_record = db.query(models.UploadedFile).filter(
+        models.UploadedFile.id == file_id,
+        models.UploadedFile.user_id == current_user.id
+    ).first()
+    
     if not file_record:
-        raise HTTPException(status_code=404, detail="File not found")
+        raise HTTPException(status_code=404, detail="File not found or access denied")
         
     if not os.path.exists(file_record.file_path):
         raise HTTPException(status_code=404, detail="Physical file not found on server")
@@ -66,10 +76,14 @@ def get_processed_dataset(file_id: int, skip: int = 0, limit: int = 100, db: Ses
         raise HTTPException(status_code=500, detail=f"Error reading dataset: {str(e)}")
 
 @router.get("/{file_id}/chart", response_model=schemas.StandardResponse)
-def get_chart_data(file_id: int, column: str, chart_type: str = "bar", limit: int = 10, db: Session = Depends(get_db)):
-    file_record = db.query(models.UploadedFile).filter(models.UploadedFile.id == file_id).first()
+def get_chart_data(file_id: int, column: str, chart_type: str = "bar", limit: int = 10, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    file_record = db.query(models.UploadedFile).filter(
+        models.UploadedFile.id == file_id,
+        models.UploadedFile.user_id == current_user.id
+    ).first()
+    
     if not file_record:
-        raise HTTPException(status_code=404, detail="File not found")
+        raise HTTPException(status_code=404, detail="File not found or access denied")
 
     if not os.path.exists(file_record.file_path):
         raise HTTPException(status_code=404, detail="Physical file not found on server")

@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:file_picker/file_picker.dart';
 import 'api_service.dart';
 import 'dashboard.dart';
+import 'login_screen.dart';
 
 void main() {
   runApp(const InsightDashApp());
@@ -56,7 +57,43 @@ class InsightDashApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const FileUploadScreen(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const RootScreen(),
+        '/auth': (context) => const AuthScreen(),
+        '/home': (context) => const FileUploadScreen(),
+      },
+    );
+  }
+}
+
+class RootScreen extends StatefulWidget {
+  const RootScreen({super.key});
+
+  @override
+  State<RootScreen> createState() => _RootScreenState();
+}
+
+class _RootScreenState extends State<RootScreen> {
+  final ApiService _apiService = ApiService();
+
+  @override
+  void initState() {
+    super.initState();
+    _checkStatus();
+  }
+
+  Future<void> _checkStatus() async {
+    final loggedIn = await _apiService.isLoggedIn();
+    if (mounted) {
+      Navigator.pushReplacementNamed(context, loggedIn ? '/home' : '/auth');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(child: CircularProgressIndicator()),
     );
   }
 }
@@ -102,6 +139,16 @@ class _FileUploadScreenState extends State<FileUploadScreen> with SingleTickerPr
       if (kDebugMode) {
         print("Error loading files: $e");
       }
+      if (e.toString().contains('401')) {
+         _handleLogout();
+      }
+    }
+  }
+
+  Future<void> _handleLogout() async {
+    await _apiService.logout();
+    if (mounted) {
+      Navigator.pushReplacementNamed(context, '/auth');
     }
   }
 
@@ -200,6 +247,11 @@ class _FileUploadScreenState extends State<FileUploadScreen> with SingleTickerPr
               _animController.forward(from: 0.0);
               _loadFiles();
             },
+          ),
+          IconButton(
+            icon: const Icon(Icons.logout_outlined),
+            tooltip: 'Logout',
+            onPressed: _handleLogout,
           ),
         ],
       ),
